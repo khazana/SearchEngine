@@ -8,12 +8,9 @@ import sys
 import pickle
 import nltk
 
-
 indexer = pickle.load( open( "unigrams.pickle", "rb" ) )
 
 corpusdir = '/Users/fathimakhazana/Documents/IRFinalProject/ParsedFiles/'
-
-queries_list = ['recursive and programming','science', 'pizza']
 
 #parameters for BM25
 k1 =1.2
@@ -22,7 +19,6 @@ k2 = 100
 R = 0.0
 ri = 0.0
 N = 3205
-
  
 def find_length_of_doc():
     document_length = {}
@@ -54,8 +50,7 @@ def prune_keys(query_terms):
         if term in keys:
             filtered_query_terms.append(term)
     return filtered_query_terms
-        
-             
+                  
 def score_documents(document_length_dict, avdl, query):
     files = [i for i in os.listdir(corpusdir) if i.endswith(".txt")]
     query_terms = query.split()
@@ -85,6 +80,9 @@ def score_documents(document_length_dict, avdl, query):
         return print("\nNo results found for",query, "!")
            
 def main():
+    f = open('queries.txt', 'r')
+    queries_list= f.readlines()
+    queries_list = [q.strip() for q in queries_list]
     document_length_dict = find_length_of_doc()
     avdl = round(mean(list(document_length_dict.values())))
     sys.stdout = open("BM25.txt", "w")
