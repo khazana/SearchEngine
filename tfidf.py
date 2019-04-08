@@ -9,8 +9,6 @@ indexer = pickle.load( open( "unigrams.pickle", "rb" ) )
 
 corpusdir = '/Users/fathimakhazana/Documents/IRFinalProject/ParsedFiles/'
 
-queries_list = ['recursive and programming','science', 'pizza']
-
 N = 3205
 
 def check_if_doc_relevant(docID,query_terms):
@@ -57,6 +55,9 @@ def score_documents(query):
         return print("\nNo results found for",query, "!")
            
 def main():
+    f = open('queries.txt', 'r')
+    queries_list= f.readlines()
+    queries_list = [q.strip() for q in queries_list]
     sys.stdout = open("tf-idf.txt", "w")
     for index,query in enumerate(queries_list):
         s = score_documents(query)
