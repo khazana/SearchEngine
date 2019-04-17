@@ -19,7 +19,15 @@ k2 = 100
 R = 0.0
 ri = 0.0
 N = 3205
- 
+
+def get_queries_list():
+    queries_dict = pickle.load( open( "parsed_queries.pickle", "rb" ) )
+    queries = []
+    for k,v in queries_dict.items():
+        queries.append(v)
+    return queries
+   
+   
 def find_length_of_doc():
     document_length = {}
     files = [i for i in os.listdir(corpusdir) if i.endswith(".txt")]
@@ -80,9 +88,7 @@ def score_documents(document_length_dict, avdl, query):
         return print("\nNo results found for",query, "!")
            
 def main():
-    f = open('queries.txt', 'r')
-    queries_list= f.readlines()
-    queries_list = [q.strip() for q in queries_list]
+    queries_list = get_queries_list()
     document_length_dict = find_length_of_doc()
     avdl = round(mean(list(document_length_dict.values())))
     sys.stdout = open("BM25.txt", "w")
