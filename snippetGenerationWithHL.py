@@ -4,9 +4,6 @@ from operator import itemgetter
 
 
 def extractSnippetFromFulltext(fulltext,qterms,maxSnippetLength):
-    fulltext = "I am having tourble finding a document. There are few documents, which are sorted. There are others which are messy."
-    qterms = ["sorted","documents"]
-
     listOfIndices = []
     lengthlist = []
     i = 0
