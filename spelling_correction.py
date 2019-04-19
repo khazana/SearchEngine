@@ -1,7 +1,3 @@
-import re
-from collections import Counter
-from nltk.corpus import words
-import enchant
 import pickle
 import nltk
 
@@ -21,8 +17,8 @@ def find_common_elements(str1, str2):
 
 #spell correction has criteria below in the following order of priority:
 #1.find words with maximum letters in common
-#2.For words, with same number of maximum letters in common, order them according to the edit distance
-#3.For words with same number of maximum letters in common and same minimum edit distance, pick the word with maximum frequency
+#2. Edit distance
+#3.For words with same number of maximum letters in common and same minimum edit distance, sort according to frequency in collection
 def spell_correct(query):
     first_letter = query[0]
     edit1 = []
@@ -31,23 +27,24 @@ def spell_correct(query):
             common_elements = find_common_elements(term, query)
             edit1.append([term,common_elements,nltk.edit_distance(term, query),tokens_frequency[term]])
     candidates_list_1  = sorted(edit1, key = lambda x: int(x[1]), reverse =True)
-    max_common = candidates_list_1 [0][1]
-    candidates_list_2 = []
-    for c in candidates_list_1 :
-        if c[1] == max_common:
-            candidates_list_2.append(c)
-    candidates_list_2 =  sorted(candidates_list_2, key = lambda x: int(x[2]))
-    min_edit= candidates_list_2 [0][2]
-    candidates_list_3 = []
-    for c in candidates_list_2:
-        if c[2] == min_edit:
-            candidates_list_3.append(c)
-    candidates_list  = sorted(candidates_list_3, key = lambda x: int(x[3]), reverse =True)
-    return candidates_list[0][0]
-
-query = 'scne'
-if query not in index_words :
-    correct_word = spell_correct(query)
-    print("Did you mean",correct_word, "?")
+    frequency = []
+    for index,item in enumerate(candidates_list_1):
+       frequency.append(item[3])
+    for index,item in enumerate(candidates_list_1):
+        candidates_list_1[index].append(round(max(frequency)*item[1] + (max(frequency)*(1/item[2])) + item[3]/max(frequency) ,4))
+    candidates_list_2 = sorted(candidates_list_1, key = lambda x: int(x[4]), reverse =True)
+    results = []
+    candidates_list_2 = candidates_list_2[:6]
+    for item in candidates_list_2:
+        results.append(item[0])
+    return results
 
 
+query = 'scicne and math'
+query_terms = query.split(' ')
+for term in query_terms:
+    if term not in index_words:
+        correct_words = spell_correct(term)
+        print("Did you mean")
+        for word in correct_words:
+            print(word)
