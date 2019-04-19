@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[140]:
-
-
 from gensim.models import Word2Vec
 import os
 import nltk
@@ -13,22 +7,12 @@ from collections import OrderedDict
 import json
 
 
-# In[141]:
+path ='/Users/fathimakhazana/Documents/IRFinalProject/ParsedFiles/'
 
-
-path = "/home/dhaval/Acads/Spring19/Information Retrieval/Project/Parsed_Files/"
-
-
-# In[142]:
-
-
-with open('common_words') as f:
+with open('common_words.txt') as f:
     content = f.read()
     stop_list = nltk.word_tokenize(content)
 stop_list.append('cacm')
-
-
-# In[143]:
 
 
 def top_embeddings(most_occur,words_in_query,k):
@@ -42,10 +26,6 @@ def top_embeddings(most_occur,words_in_query,k):
             break
     return l
 
-
-# In[144]:
-
-
 def removeStopWords(l):
     k = []
     for word in l:
@@ -53,44 +33,24 @@ def removeStopWords(l):
             k.append(word)
     return k
 
-
-# In[145]:
-
-
 def get_Tokens(filename):
     file_content = open(path + filename).read()
     tokens = nltk.word_tokenize(file_content)
     return removeStopWords(tokens)
-
-
-# In[146]:
-
 
 tokens = []
 for file in os.listdir(path):
     tokens.append(get_Tokens(file))
 
 
-# In[147]:
-
-
 model = Word2Vec(tokens, min_count=1)
-
-
-# In[148]:
 
 
 with open('parsed_queries.pickle','rb') as f:
     queries = pickle.load(f)
 
 
-# In[152]:
-
-
 queries_expanded = {}
-
-
-# In[153]:
 
 
 for key,value in queries.items():
@@ -109,10 +69,5 @@ for key,value in queries.items():
     l = query_terms + expansion_terms
     queries_expanded[key] = ' '.join(l)
 
-
-# In[154]:
-
-
-with open('queries_expanded_embeddings.json', 'w') as fp:
-    json.dump(queries_expanded, fp)
-
+with open('expanded_queries_embedding.pickle','wb') as f:
+        pickle.dump(queries_expanded,f)
