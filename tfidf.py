@@ -5,17 +5,53 @@ import pickle
 import nltk
 
 
+#change index and corpus if stemming is required
 indexer = pickle.load( open( "unigrams.pickle", "rb" ) )
+#indexer = pickle.load( open( "stemmed_indexer.pickle", "rb" ) )
 
 corpusdir = '/Users/fathimakhazana/Documents/IRFinalProject/ParsedFiles/'
+#corpusdir = '/Users/fathimakhazana/Documents/IRFinalProject/StemmedParsedFiles/'
 
-N = 3205
+#change in case expansion is required
+query_file = "queries_expanded_pseudo.pickle"
 
-def get_queries_list():
-    queries_dict = pickle.load( open( "parsed_queries.pickle", "rb" ) )
-    queries = []
-    for k,v in queries_dict.items():
-        queries.append(v)
+
+N = 3204
+
+def getStopWordslist():
+    with open('/Users/fathimakhazana/Documents/IRFinalProject/common_words.txt', 'r') as f:
+        stop_words = f.readlines()
+    for i in range(0,len(stop_words)):
+        stop_words[i] = stop_words[i].strip().lower()
+    return stop_words
+
+  
+def remStopWords(text,stop_words):
+    words = text.split()
+    finaltext = ""
+    for r in words: 
+        if not r.lower() in stop_words: 
+            finaltext  = finaltext + " " + r
+    return finaltext
+
+def get_queries_list(mode):
+    if mode == 'stopped':
+        stop_words = getStopWordslist()
+        queries_dict = pickle.load( open( query_file, "rb" ) )
+        queries = []
+        for k,v in  sorted(queries_dict.items()):
+            queries.append(v)
+        queries = [remStopWords(q,stop_words) for q in queries]
+        queries = [ " ".join(q.split()) for q in queries]
+    elif mode =='stemmed':
+        queries = []
+        queries  = open('cacm_stem.query.txt', "r").readlines()
+        queries = [q.strip() for q in queries]
+    elif mode =='normal':
+        queries_dict = pickle.load( open(query_file, "rb" ) )
+        queries = []
+        for k,v in  sorted(queries_dict.items()):
+            queries.append(v)
     return queries
 
 def check_if_doc_relevant(docID,query_terms):
@@ -62,16 +98,24 @@ def score_documents(query):
         return print("\nNo results found for",query, "!")
            
 def main():
-    queries_list = get_queries_list()
+     #queries have three modes: stopped, stemmed and normal
+    #for expanded queries, setting is normal with expandede query pickle file
+    results = {}
+    queries_list = get_queries_list('normal')
     sys.stdout = open("tf-idf.txt", "w")
     for index,query in enumerate(queries_list):
+        results[query] = []
         s = score_documents(query)
         if s:
             print('\n')
             print("Query: ",query)
+            for i,result in enumerate(s):
+                results[query].append(result[0])
             for i,result in enumerate(s[:100]):
                 rank = int(i) + 1
                 print(index+1, " Q0 ",result[0]," ",rank," ",result[1]," tf-idf")
+    with open('tfidf.pickle','wb') as f:
+        pickle.dump(results,f)
 
 if __name__ == "__main__":
     main()
