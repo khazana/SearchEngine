@@ -39,12 +39,17 @@ def spell_correct(query):
         results.append(item[0])
     return results
 
+def main():
+    query = 'scicne and mth'
+    query_terms = query.split(' ')
+    results = {}
+    for term in query_terms:
+        if term not in index_words:
+            correct_words = spell_correct(term)
+            results[term] = correct_words
+    with open('spelling_corrected.pickle','wb') as f:
+        pickle.dump(results,f)
 
-query = 'scicne and math'
-query_terms = query.split(' ')
-for term in query_terms:
-    if term not in index_words:
-        correct_words = spell_correct(term)
-        print("Did you mean")
-        for word in correct_words:
-            print(word)
+
+if __name__ == "__main__":
+    main()
