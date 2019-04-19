@@ -4,17 +4,40 @@ import sys
 import pickle
 import nltk
 
+
+
 indexer = pickle.load( open( "unigrams.pickle", "rb" ) )
+#indexer = pickle.load( open( "stemmed_indexer.pickle", "rb" ) )
 
 corpusdir = '/Users/fathimakhazana/Documents/IRFinalProject/ParsedFiles/'
+#corpusdir = '/Users/fathimakhazana/Documents/IRFinalProject/StemmedParsedFiles/'
 
-N = 3205
+N = 3204
 
-def get_queries_list():
-    queries_dict = pickle.load( open( "parsed_queries.pickle", "rb" ) )
+def getStopWordslist():
+    with open('/Users/fathimakhazana/Documents/IRFinalProject/common_words.txt', 'r') as f:
+        stop_words = f.readlines()
+    for i in range(0,len(stop_words)):
+        stop_words[i] = stop_words[i].strip().lower()
+    return stop_words
+
+  
+def remStopWords(text,stop_words):
+    words = text.split()
+    finaltext = ""
+    for r in words: 
+        if not r.lower() in stop_words: 
+            finaltext  = finaltext + " " + r
+    return finaltext
+
+def get_queries_list(stop_words):
+    queries_dict = pickle.load( open( "queries_expanded_pseudo.pickle", "rb" ) )
     queries = []
-    for k,v in queries_dict.items():
+    for k,v in  sorted(queries_dict.items()):
         queries.append(v)
+        #uncomment below 2 lines for stopping
+#    queries = [remStopWords(q,stop_words) for q in queries]
+#    queries = [ " ".join(q.split()) for q in queries]
     return queries
 
 def get_collection_dict():
@@ -42,6 +65,8 @@ def check_if_doc_relevant(docID,query_terms):
     for term in query_terms:
         documents = indexer[term]
         documents = [d[0] for d in documents]
+          #uncomment below line for stemmed indexer
+        #documents = [d.split('.html')[0]+'.txt' for d in documents]
         if docID in documents:
             flag += 1
     if flag > 0:
@@ -86,16 +111,26 @@ def score_documents(query):
         return print("\nNo results found for",query, "!")
            
 def main():
-    queries_list = get_queries_list()
-    sys.stdout = open("QLMD.txt", "w")
+    stop_words = getStopWordslist()
+    queries_list = get_queries_list(stop_words)
+    results = {}
+        #uncomment below 2 lines for stemmed queries
+#    queries_list = open('cacm_stem.query.txt', "r").readlines()
+#    queries_list = [q.strip() for q in queries_list]
+    sys.stdout = open("QLMD_expansion_pseudo.txt", "w")
     for index,query in enumerate(queries_list):
+        results[query] = []
         s = score_documents(query)
         if s:
             print('\n')
             print("Query: ",query)
+            for i,result in enumerate(s):
+                results[query].append(result[0])
             for i,result in enumerate(s[:100]):
                 rank = int(i) + 1
-                print(index+1, " Q0 ",result[0]," ",rank," ",result[1]," QLMD")
+                print(index+1, " Q0 ",result[0]," ",rank," ",result[1]," QLMD_expansion_pseudo")
+    with open('qmd_expansion_pseudo.pickle','wb') as f:
+        pickle.dump(results,f)
 
 if __name__ == "__main__":
     main()
