@@ -131,7 +131,7 @@ def create_spreadsheet_pr(precision,recall,file_name):
             df = DataFrame(result, columns= [title,'Recall', 'Precision'])
             dataframes.append(df)
     pd = pd.concat(dataframes,  axis=1)
-    pd.to_excel('/Users/fathimakhazana/Documents/IRFinalProject/'+ file_name+ '.xlsx', index = None, header=True) #Don't forget to add '.xlsx' at the end of the path
+    pd.to_excel('/Users/fathimakhazana/Documents/IRFinalProject/Results/'+ file_name+ '.xlsx', index = None, header=True) #Don't forget to add '.xlsx' at the end of the path
 
 def pk(precision,name):
     rel_list = list(relevance.keys())
@@ -163,10 +163,8 @@ results = [('Retrivel Model', ['TF-IDF', 'QLM-Dirichlet', 'BM25','Lucene','TF-ID
          ('MRR', MRR_list),]
 
 pd1 = pd.DataFrame.from_items(results)
-pd1.to_excel('/Users/fathimakhazana/Documents/IRFinalProject/MAP-MRR' + '.xlsx', index = None, header=True) #Don't forget to add '.xlsx' at the end of the path
+pd1.to_excel('/Users/fathimakhazana/Documents/IRFinalProject/Results/MAP-MRR' + '.xlsx', index = None, header=True) #Don't forget to add '.xlsx' at the end of the path
 
-pd2 = pd.concat(pk_list,ignore_index=True, axis=1)
-pd2.to_excel('/Users/fathimakhazana/Documents/IRFinalProject/PK' + '.xlsx', index = None, header=True) #Don't forget to add '.xlsx' at the end of the path
-
-
+pd2 = pd.concat(pk_list, axis=1)
+pd2.to_excel('/Users/fathimakhazana/Documents/IRFinalProject/Results/PK' + '.xlsx', index = None, header=True) #Don't forget to add '.xlsx' at the end of the path
 
