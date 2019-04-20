@@ -109,6 +109,15 @@ python tfidf.py
 python QMD.py
 python evaluation.py
 ```
+The following steps have to be followed for snippet generation:
+
+## Usage
+
+```bash
+python snippetGenerationWithHL.py
+python resultHTMLBuilder.py
+```
+
 For Lucene:
 
 Run IndexFiles.java (after modifying paths) followed by SearchFiles.java in Eclipse. Enter the query term to retrieve the top 100 documents.
