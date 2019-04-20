@@ -110,7 +110,7 @@ def create_spreadsheet_pr(precision,recall,file_name):
     rel_list = list(relevance.keys())
     for i in range(len(rel_list)):
         result = {}
-        title = 'Query ' + str(i+1)
+        title = 'Query ' + str(rel_list[i])
         result = {title: list(range(1, 101)),
                   'Precision':precision[i],
                   'Recall':recall[i]}
