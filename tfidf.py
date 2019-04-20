@@ -5,15 +5,22 @@ import pickle
 import nltk
 
 
-#change index and corpus if stemming is required
-indexer = pickle.load( open( "unigrams.pickle", "rb" ) )
-#indexer = pickle.load( open( "stemmed_indexer.pickle", "rb" ) )
+indexer = {}
 
-corpusdir = '/Users/fathimakhazana/Documents/IRFinalProject/ParsedFiles/'
-#corpusdir = '/Users/fathimakhazana/Documents/IRFinalProject/StemmedParsedFiles/'
+corpusdir = ''
 
 #change in case expansion is required
-query_file = "queries_expanded_pseudo.pickle"
+query_file = "Pickles/expanded_queries_pseudo.pickle"
+
+def set_index_corpus_path(mode):
+    global indexer
+    global corpusdir
+    if mode == 'stemmed':
+        indexer = pickle.load( open( "Pickles/stemmed_indexer.pickle", "rb" ) )
+        corpusdir = '/Users/fathimakhazana/Documents/IRFinalProject/StemmedParsedFiles/'
+    else:
+        corpusdir = '/Users/fathimakhazana/Documents/IRFinalProject/ParsedFiles/'
+        indexer = pickle.load( open( "Pickles/unigrams.pickle", "rb" ) )
 
 
 N = 3204
@@ -101,8 +108,9 @@ def main():
      #queries have three modes: stopped, stemmed and normal
     #for expanded queries, setting is normal with expandede query pickle file
     results = {}
+    set_index_corpus_path('normal')
     queries_list = get_queries_list('normal')
-    sys.stdout = open("tf-idf.txt", "w")
+    sys.stdout = open("tf-idf_qe_pseudo.txt", "w")
     for index,query in enumerate(queries_list):
         results[query] = []
         s = score_documents(query)
@@ -113,8 +121,8 @@ def main():
                 results[query].append(result[0])
             for i,result in enumerate(s[:100]):
                 rank = int(i) + 1
-                print(index+1, " Q0 ",result[0]," ",rank," ",result[1]," tf-idf")
-    with open('tfidf.pickle','wb') as f:
+                print(index+1, " Q0 ",result[0]," ",rank," ",result[1]," tf-idf_qe_pseudo")
+    with open('tfidf_qe_pseudo.pickle','wb') as f:
         pickle.dump(results,f)
 
 if __name__ == "__main__":
