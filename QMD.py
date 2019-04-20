@@ -5,18 +5,26 @@ import pickle
 import nltk
 
 
-#change index and corpus if stemming is required
-indexer = pickle.load( open( "unigrams.pickle", "rb" ) )
-#indexer = pickle.load( open( "stemmed_indexer.pickle", "rb" ) )
 
-corpusdir = '/Users/fathimakhazana/Documents/IRFinalProject/ParsedFiles/'
-#corpusdir = '/Users/fathimakhazana/Documents/IRFinalProject/StemmedParsedFiles/'
+indexer = {}
+
+corpusdir = ''
 
 #change in case expansion is required
-query_file = "queries_expanded_pseudo.pickle"
+query_file = "Pickles/expanded_queries_pseudo.pickle"
 
 N = 3204
 
+def set_index_corpus_path(mode):
+    global indexer
+    global corpusdir
+    if mode == 'stemmed':
+        indexer = pickle.load( open( "Pickles/stemmed_indexer.pickle", "rb" ) )
+        corpusdir = '/Users/fathimakhazana/Documents/IRFinalProject/StemmedParsedFiles/'
+    else:
+        corpusdir = '/Users/fathimakhazana/Documents/IRFinalProject/ParsedFiles/'
+        indexer = pickle.load( open( "Pickles/unigrams.pickle", "rb" ) )
+        
 def getStopWordslist():
     with open('/Users/fathimakhazana/Documents/IRFinalProject/common_words.txt', 'r') as f:
         stop_words = f.readlines()
@@ -126,7 +134,8 @@ def main():
     #for expanded queries, setting is normal with expandede query pickle file
     queries_list = get_queries_list('normal')
     results = {}
-    sys.stdout = open("QLMD_expansion_pseudo.txt", "w")
+    set_index_corpus_path('stemmed')
+    sys.stdout = open("QLMD_qe_embedding.txt", "w")
     for index,query in enumerate(queries_list):
         results[query] = []
         s = score_documents(query)
@@ -137,8 +146,8 @@ def main():
                 results[query].append(result[0])
             for i,result in enumerate(s[:100]):
                 rank = int(i) + 1
-                print(index+1, " Q0 ",result[0]," ",rank," ",result[1]," QLMD_expansion_pseudo")
-    with open('qmd_expansion_pseudo.pickle','wb') as f:
+                print(index+1, " Q0 ",result[0]," ",rank," ",result[1]," QLMD_qe_embedding")
+    with open('qmd_qe_embedding.pickle','wb') as f:
         pickle.dump(results,f)
 
 if __name__ == "__main__":
