@@ -58,11 +58,22 @@ This project consists of the following subtasks:
         i)Pseudorelevance feedback - This is implemented with the code in 'pseudorelevance_feedback.py'. This code will take ranking dictionary 
         ii)Word2Vector embedding - 
 
+4.Displaying the results
+    For displaying the results below two files have been used.
+    i. snippetGenerationWithHL.py - This code accepts list of documents, query and maximum snippet length as parameter. For the given       query it iterartes through fulltext of all the documents one by one, and for each full text it tries to find the snippet which has       all/maximum number of terms with closest proximity.
+    
+    ii. resultHTMLBuilder.py - This code generates a single html file for each of the 64 queries, containing snippets from top 100           documents ranked based on tf-idf score. It puts all the result html files in a single folder. The folder path needs to be changed to 
+    successfully run this code. This uses snippetGenerationWithHL.py file, thus the above file needs to be there to run this.
+  
 Evaluation:
     The evaluation is done with just one file: evaluation.py. The input to this file is an array called 'runs'. Each item in the list is a tuple containing a dictionary generated from the above retrieval runs (containing the rankings in sorted order) and a name for the run. The stored pickle files have to be loaded into dictionaries for this. The code when run will generate the following:
            i) A spreadsheet for each run with the precision and recall values for the top 100 documents for   the 52 queries whose relevance information is provided. (so 9 sheets in this case)
            ii) A single spreadsheet containing the the MAP and MRR values for all the runs.
            ii) A single spreadsheet containing the the P@5 and P@20 values for each query for all the runs.
+           
+Spelling correction - 
+    For spelling correction below file is used.
+    spelling_correction.py - This file performs spelling correction, by going through each of the query term, and finding a word             suggestion based on their minimum edit distance and frequency of the word in the collection.
 
 
 ## Libraries used
