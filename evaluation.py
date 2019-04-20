@@ -1,6 +1,7 @@
 from pandas import DataFrame
 import pandas as pd
 import pickle
+import numpy
 
 tables = []
 pk_list = []
@@ -19,8 +20,9 @@ run8 = pickle.load( open( "QMD_qe_embedding.pickle", "rb" ) )
 run9 = pickle.load( open( "BM25_stopped.pickle", "rb" ) )
 
 
-runs = [(run1,'tfidf'),(run2,'qmd'),(run3,'bm25'),(run4,'lucene'),
-        (run5,'tfidf_stopped'),(run6,'QMD_stopped'),(run7,'QLMD_qe_pseudo'),(run8,'QLMD_qe_embedding'),(run9,'BM25_stopped')]
+runs = [(run1,'tfidf'),(run2,'qmd'),(run3,'bm25'),(run4,'lucene'),(run5,'tfidf_stopped'),(run6,'QMD_stopped'),
+        (run7,'QLMD_qe_pseudo'),(run8,'QLMD_qe_embedding'),(run9,'BM25_stopped')]
+#runs = [(run5,'tfidf_stopped')]
 
 relevance = pickle.load( open( "relevance.pickle", "rb" ))
 
@@ -105,27 +107,40 @@ def precision_recall(ranking_dict):
     return prec,rec
             
 def create_spreadsheet_pr(precision,recall,file_name):
+    rel_list = list(relevance.keys())
     import pandas as pd
     dataframes=[]
-    rel_list = list(relevance.keys())
     for i in range(len(rel_list)):
-        result = {}
-        title = 'Query ' + str(rel_list[i])
-        result = {title: list(range(1, 101)),
-                  'Precision':precision[i],
-                  'Recall':recall[i]}
-        df = DataFrame(result, columns= [title,'Recall', 'Precision'])
-        dataframes.append(df)
-    pd = pd.concat(dataframes, axis = 1)
+            result = {}
+            if len(precision[i]) < 100:
+                 p = precision[i]
+                 r = recall[i]
+                 while (len(p) < 100):
+                     p.append('nan')
+                 while (len(r) < 100):
+                     r.append('nan')
+                 title = 'Query ' + str(rel_list[i])
+                 result = {title: list(range(1, 101)),
+                      'Precision':p,
+                      'Recall':r}
+            else:
+                title = 'Query ' + str(rel_list[i])
+                result = {title: list(range(1, 101)),
+                      'Precision':precision[i],
+                      'Recall':recall[i]}
+            df = DataFrame(result, columns= [title,'Recall', 'Precision'])
+            dataframes.append(df)
+    pd = pd.concat(dataframes,  axis=1)
     pd.to_excel('/Users/fathimakhazana/Documents/IRFinalProject/'+ file_name+ '.xlsx', index = None, header=True) #Don't forget to add '.xlsx' at the end of the path
 
 def pk(precision,name):
+    rel_list = list(relevance.keys())
     pk5 = []
     pk20 = []
     for i in range(0,52):
-        pk5.append(precision[i][4]) 
-        pk20.append(precision[i][19]) 
-    p_k = [('Query', list(range(1,53))),
+            pk5.append(precision[i][4]) 
+            pk20.append(precision[i][19]) 
+    p_k = [('Query', rel_list),
                  ('PK5', pk5),
                  ('PK20', pk20),]
     res = pd.DataFrame.from_items(p_k)
@@ -133,23 +148,25 @@ def pk(precision,name):
 
   
 def get_tables(run,name):
-    p,r = precision_recall(run)
-    create_spreadsheet_pr(p,r,name + '_precision_recall')
-    MAP(run)
-    MRR(run)
-    pk(p,name+'_PK')
+     p,r = precision_recall(run)
+     create_spreadsheet_pr(p,r,name + '_precision_recall')
+     MAP(run)
+     MRR(run)
+     pk(p,name+'_PK')
 
 for i in runs:
     get_tables(i[0],i[1])
     
 
-results = [('Retrivel Model', ['TF-IDF', 'QLM-Dirichlet', 'BM25','Lucene']),
+results = [('Retrivel Model', ['TF-IDF', 'QLM-Dirichlet', 'BM25','Lucene','TF-IDF-Stopped','QLM-Dirichlet-Stopped','QLM-QE-Pseudo','QMD-QE-Embedding','BM25-stopped']),
          ('MAP', MAP_list),
          ('MRR', MRR_list),]
 
 pd1 = pd.DataFrame.from_items(results)
 pd1.to_excel('/Users/fathimakhazana/Documents/IRFinalProject/MAP-MRR' + '.xlsx', index = None, header=True) #Don't forget to add '.xlsx' at the end of the path
 
-pd2 = pd.concat(pk_list, axis = 1)
+pd2 = pd.concat(pk_list,ignore_index=True, axis=1)
 pd2.to_excel('/Users/fathimakhazana/Documents/IRFinalProject/PK' + '.xlsx', index = None, header=True) #Don't forget to add '.xlsx' at the end of the path
+
+
 
