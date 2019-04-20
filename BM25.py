@@ -14,6 +14,7 @@ relevance = pickle.load( open( "relevance.pickle", "rb" ) )
 
 
 corpusdir = '/Users/fathimakhazana/Documents/IRFinalProject/ParsedFiles/'
+query_file = "Pickles/parsed_queries.pickle"
 
 #parameters for BM25
 k1 =1.2
@@ -21,11 +22,36 @@ b =0.75
 k2 = 100
 N = 3204
 
-def get_queries_list():
-    queries_dict = pickle.load( open( "parsed_queries.pickle", "rb" ) )
-    queries = []
-    for k,v in sorted(queries_dict.items()):
-        queries.append(v)
+def getStopWordslist():
+    with open('/Users/fathimakhazana/Documents/IRFinalProject/common_words.txt', 'r') as f:
+        stop_words = f.readlines()
+    for i in range(0,len(stop_words)):
+        stop_words[i] = stop_words[i].strip().lower()
+    return stop_words
+
+  
+def remStopWords(text,stop_words):
+    words = text.split()
+    finaltext = ""
+    for r in words: 
+        if not r.lower() in stop_words: 
+            finaltext  = finaltext + " " + r
+    return finaltext
+
+def get_queries_list(mode):
+    if mode == 'stopped':
+        stop_words = getStopWordslist()
+        queries_dict = pickle.load( open( query_file, "rb" ) )
+        queries = []
+        for k,v in  sorted(queries_dict.items()):
+            queries.append(v)
+        queries = [remStopWords(q,stop_words) for q in queries]
+        queries = [ " ".join(q.split()) for q in queries]
+    elif mode =='normal':
+        queries_dict = pickle.load( open(query_file, "rb" ) )
+        queries = []
+        for k,v in  sorted(queries_dict.items()):
+            queries.append(v)
     return queries
 
  
@@ -63,8 +89,8 @@ def prune_keys(query_terms):
  
 def find_relevant_docs(query_index):
     rel_list = list(relevance.keys())
-    if str(query_index + 1) in rel_list:
-        return relevance[str(query_index + 1)]
+    if (query_index + 1) in rel_list:
+        return relevance[query_index + 1]
     else:
         return []
     
@@ -117,10 +143,10 @@ def score_documents(query_index,document_length_dict, avdl, query):
            
 def main():
     results = {}
-    queries_list = get_queries_list()
+    queries_list = get_queries_list('normal')
     document_length_dict = find_length_of_doc()
     avdl = round(mean(list(document_length_dict.values())))
-    sys.stdout = open("BM25.txt", "w")
+    sys.stdout = open("BM25_stopped.txt", "w")
     for index,query in enumerate(queries_list):
         results[query] = []
         s = score_documents(index,document_length_dict, avdl, query)
@@ -131,8 +157,8 @@ def main():
                 results[query].append(result[0])
             for i,result in enumerate(s[:100]):
                 rank = int(i) + 1
-                print(index+1, " Q0 ",result[0]," ",rank," ",result[1]," BM25")
-    with open('BM25.pickle','wb') as f:
+                print(index+1, " Q0 ",result[0]," ",rank," ",result[1]," BM25_stopped")
+    with open('BM25_stopped.pickle','wb') as f:
         pickle.dump(results,f)
 
 if __name__ == "__main__":
