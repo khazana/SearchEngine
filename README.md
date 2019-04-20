@@ -31,7 +31,7 @@ This project consists of the following subtasks:
  Three retrieval models have been implemented from scratch using the following files:<br />
 
 i) tf-idf.py - This file has three modes: 'normal','stemmed' and 'stopped' for the get_queries_list(mode) function. If 'normal' is selected, the default queries are chosen for the run. If 'stopped' is chosen, queries go through stopping. If 'stemmed' is chosen, the stemmed queries are used. When mode 'stemmed' is chosen, mode must be 'stemmed' for the function set_index_corpus_path(mode), otherwise it should be set to 'normal'. This function will set the index and corpus path accordingly. The output of this file will be the following two:<br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a) A text file under the same name containing the top 100 results for each of the 64 queries along with the score.<br />
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; a) A text file under the same name containing the top 100 results for each of the 64 queries along with the score.<br />
                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; b) A pickle file of a dictionary where key is a query and value is the list of all ranked documents.<br /><br />
         
 ii) qmd.py - This file will have three modes: 'normal','stemmed' and 'stopped' for the get_queries_list(mode) function. If 'normal' is selected, the default queries are chosen for the run. If 'stopped' is chosen, queries go through stopping. If 'stemmed' is chosen, the stemmed queries are used. When mode 'stemmed' is chosen, mode must be 'stemmed' for the function set_index_corpus_path(mode), otherwise it should be set to 'normal'. This function will set the index and corpus path accordingly. The output of this file will be the following two:<br />
