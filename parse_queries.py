@@ -13,6 +13,7 @@ for i in range(0,64):
     s = root["DOC"][i]["DOCNO"][0].tail
     s = s.translate(str.maketrans('', '', string.punctuation))
     s = s.strip().lower()
+    s = " ".join(s.split())
     s = s.replace('\n',' ')
     queries[i+1] = s
 
