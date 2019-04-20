@@ -46,13 +46,13 @@ This project consists of the following subtasks:
 
         The ranking from Lucene is found using the following two files in Java:
 
-        1)IndexFiles.java: The code was foundon a Lucene tutorial <http://lucene.apache.org/core/8_0_0/demo/src-html/org/apache/lucene/demo/IndexFiles.html>. This file when run on Eclipse will index all the raw HTML files and store them in the specified directory. We have to specify the path to the raw HTML files to the variable  'String docsPath'. We also have to include the path to the location where we want to store the indexed documents on our computer in the variable 'String indexPath'.
+        1)IndexFiles.java: The code was found on a Lucene tutorial <http://lucene.apache.org/core/8_0_0/demo/src-html/org/apache/lucene/demo/IndexFiles.html>. This file when run on Eclipse will index all the raw HTML files and store them in the specified directory. We have to specify the path to the raw HTML files to the variable  'String docsPath'. We also have to include the path to the location where we want to store the indexed documents on our computer in the variable 'String indexPath'.
 
         2)SearchFiles.java: The code was found on a Lucene tutorial <http://lucene.apache.org/core/8_0_0/demo/src-html/org/apache/lucene/demo/SearchFiles.html>. This file should be in the same directory as the IndexFiles.java. This file when run on Eclipse will prompt the user to enter a query. It will print the top 100 documents matching the query ranked in the order of decreasing relevance per page.
 
         The results from Lucene were stored in a text file. This text file was then parsed using the file 'lucene.py' to form a pickle file similar to the ones generated above containing the ranking.
  
-
+ 
  Query Expansion:
     There are two methods of query expansion:
         i)Pseudorelevance feedback - This is implemented with the code in 'pseudorelevance_feedback.py'. This code will take ranking dictionary 
