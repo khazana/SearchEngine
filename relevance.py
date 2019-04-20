@@ -13,3 +13,4 @@ for item in relevance:
 with open('relevance.pickle','wb') as f:
     pickle.dump(rel,f)
     
+
