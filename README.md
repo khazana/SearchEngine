@@ -71,7 +71,7 @@ When a retrievel model requires query enhancement, the results pickle file of a 
            
 4.Spelling correction - <br />
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;For spelling correction below file is used:<br />
-    spelling_correction.py - This file performs spelling correction. The input is a query string, consisiting of one or more terms. It checks every term and if there is a mistake, makes the correction with 6 alternatives. The output of this code is stored as a pickle file. It contains a dictionary where key is the incorrect query term and value is the six alternatives.
+    spelling_correction.py - This file performs spelling correction. The input is a query string, consisiting of one or more terms. It checks every term and if there is a mistake, makes the correction with 6 alternatives. The output of this code is stored as a pickle file. It contains a dictionary where key is the incorrect query term and value is the six alternatives. Before this code is run, the auxillary code 'tokens_frequency.py' must be run. This will pickle a dictionary containing the frequencies of each word in the entire collection. 
 
 
 ## Libraries used
