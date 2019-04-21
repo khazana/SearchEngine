@@ -53,7 +53,7 @@ The results from Lucene were stored in a text file manually. This text file was 
  Query Expansion:<br />
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;There are two methods of query expansion:<br />
        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; i)Pseudorelevance feedback - This is implemented with the code in 'pseudorelevance_feedback.py'. This code requires the pickle file relevance.pickle as it takes relevance judgements into consideration. This code will take ranking dictionary pickle file generated from a retrievel model as input and generate a pickled queries dictionary where keys are the query id and value is the query with expanded terms.<br />
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ii)Word2Vector embedding - This is implemented with the code in 'query_expansion_embedding.py'. This code will take ranking dictionary pickle file generated from a retrievel model as input and generate a pickled queries dictionary where keys are the query id and value is the query with expanded terms.<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ii)Thesaurus expansion - This is implemented with the code in 'thesaurusExpansion.py'. This code will take ranking dictionary pickle file generated from a retrievel model as input and generate a pickled queries dictionary where keys are the query id and value is the query with expanded terms.<br />
         
 When a retrievel model requires query enhancement, the results pickle file of a run has to be given as input to one of the above methods, and the generated output pickle file with expanded queries,i.e, the new queries input pickle should replace the existing queries pickle file in the retrievel model code.<br />
 
