@@ -75,7 +75,7 @@ When a retrievel model requires query enhancement, the results pickle file of a 
 
 
 ## Libraries used
-urllib.request, nltk, Beautiful soup, httplib2, collections, numpy, itertools, string, re, os, matplotlib.pyplot
+nltk, Beautiful soup, collections, numpy, itertools, string, re, os, matplotlib.pyplot, math, pickle, lxml, json, stemming, operator
 
 ##Development/IDEs
 Eclipse(4.0 or above)
